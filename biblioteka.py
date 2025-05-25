@@ -90,7 +90,7 @@ while True:
     if dd == "8":
         add(cursor)
 
-
+ 
     connection.commit()
 
     connection.close()
