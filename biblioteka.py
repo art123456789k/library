@@ -75,18 +75,19 @@ def ARB(cursor):
     cursor.execute(f"SELECT * FROM biblioteka WHERE title = '{b}'")
     rows = cursor.fetchall()
     u = 0
-
+    
     for data in rows:
         u +=1
+        if data[0]:
+            cursor.execute(f"INSERT INTO readers (name) VALUES ('{d}');")
+            cursor.execute(f"INSERT INTO lol (due_date)VALUES ('{D}');")
     if u == 0:
         print("Такой книги нет!")
-        ARB(cursor)
-
-    cursor.execute(f"INSERT INTO readers (name,books,due_date) VALUES ('{d}','{b}','{D}');")
+        ARB(cursor)    
 def RBR(cursor):
     d = input("Введтите ФИО читателя: ")
-    cursor.execute(f"""SELECT books FROM readers WHERE name = '{d}' ;""")
-        
+    cursor.execute(f"""SELECT readers.name,biblioteka.title,lol.due_date  FROM readers  INNER JOIN lol ON lol.book_id = readers.id INNER JOIN biblioteka ON readers.id != -3  WHERE readers.name = '{d}' ;""")
+    
     rows = cursor.fetchall()
         
     u = 0
@@ -94,14 +95,14 @@ def RBR(cursor):
     for data in rows:
         u +=1
         
-        print(str(u)+")",str(data[0]))
+        print(str(u)+")",str(data[0])," ",str(data[1])," до",str(data[2]))
 def DR(cursor):
 
     d = input("ФИО читателя: ")
     cursor.execute(f"""DELETE FROM readers WHERE name = '{d}';""")
 def VOB(cursor):
     d = input("Введите ФИО читателя: ")
-    cursor.execute(f"SELECT books,due_date FROM readers WHERE name = '{d}' AND due_date < datetime('now'); ")
+    cursor.execute(f"SELECT biblioteka.title,biblioteka.author,biblioteka.year,biblioteka.genre FROM readers INNER JOIN biblioteka ON biblioteka.id = readers.id INNER JOIN lol ON lol.book_id = readers.id  WHERE name = '{d}' AND lol.due_date < datetime('now'); ")
 
     rows = cursor.fetchall()
         
@@ -110,14 +111,14 @@ def VOB(cursor):
     for data in rows:
         u +=1
         
-        print(str(u)+")",str(data[0])," ",str(data[1]))
+        print(str(u)+")",str(data[0])," ",str(data[1])," ",str(data[2])," ",str(data[3]))
 
 while True:
-    connection = sqlite3.connect('my_database.db')
+    connection = sqlite3.connect('m.db')
     cursor = connection.cursor()
 
     
-    
+    time.sleep(1)
     dd = input('Выберите действие\n1-вывести книги\n2-найти книги по автору\n3-найти новые книги(позже 2010)\n4-кол-во разных книг в библиотеке\n5-жанры\n6-удалить книгу по названию\n7-изменить год издания\n8-добавить книгу \n9-добавить книгу читателю\n10-просмотреть книги читателя\n11-удалить читателя\n12-просмотр просроченных книг\n: ')
     if dd == "1": 
         output_all(cursor)
