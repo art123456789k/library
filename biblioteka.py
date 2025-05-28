@@ -1,22 +1,22 @@
 import sqlite3
 import datetime
-import time
+
 
 def menu():
-    print('''______________МЕНЮ_______________\n
-    1-вывести книги                  |\n
-    2-найти книги по автору          |\n
-    3-найти новые книги(позже 2010)  |\n
-    4-кол-во разных книг в библиотеке|\n
-    5-жанры                          |\n
-    6-удалить книгу по названию      |\n
-    7-изменить год издания           |\n
-    8-добавить книгу                 |\n
-    9-добавить книгу читателю        |\n
-    10-просмотреть книги читателя    |\n
-    11-удалить читателя              |\n
-    12-просмотр просроченных книг    |\n
-    _________________________________ ''')
+    print('''    ______________МЕНЮ_______________
+    1-вывести книги                  |
+    2-найти книги по автору          |
+    3-найти новые книги(позже 2010)  |
+    4-кол-во разных книг в библиотеке|
+    5-жанры                          |
+    6-удалить книгу по названию      |
+    7-изменить год издания           |
+    8-добавить книгу                 |
+    9-добавить книгу читателю        |
+    10-просмотреть книги читателя    |
+    11-удалить читателя              |
+    12-просмотр просроченных книг    |
+    _________________________________| ''')
 def output_all(cursor):
     cursor.execute("""SELECT * FROM biblioteka ORDER BY title;""")
         
@@ -120,13 +120,14 @@ def VOB(cursor):
     cursor.execute(f"SELECT biblioteka.title,biblioteka.author,biblioteka.year,biblioteka.genre FROM readers INNER JOIN biblioteka ON biblioteka.id = readers.id INNER JOIN lol ON lol.book_id = readers.id  WHERE name = '{d}' AND lol.due_date < datetime('now'); ")
 
     rows = cursor.fetchall()
-        
+
     u = 0
 
     for data in rows:
         u +=1
         
         print(str(u)+")",str(data[0])," ",str(data[1])," ",str(data[2])," ",str(data[3]))
+
 dd = 0
 while True:
     connection = sqlite3.connect('m.db')
@@ -160,6 +161,7 @@ while True:
         VOB(cursor)
     
     dd = input(':')
+    
     connection.commit()
 
     connection.close()
